@@ -56,7 +56,7 @@ func roundToInf(d float64) int64 {
 }
 
 // RoughDurationDirection returns the RoughDuration of d decorated with an indication
-// of past or present.
+// of past or present. See RoughDuration for further details.
 func RoughDurationDirection(d time.Duration) string {
 	desc := RoughDuration(d)
 	if d.Nanoseconds() < 0 {
@@ -66,9 +66,14 @@ func RoughDurationDirection(d time.Duration) string {
 	}
 }
 
-// Ballpark takes a time.Duration and returns a string that roughly describes the
-// duration in human terms. It is shamelessly copied from Ruby-on-Rails equivalent.
-// http://apidock.com/rails/ActionView/Helpers/DateHelper/distance_of_time_in_words
+// RoughDuration returns a string that is an estimate of the duration in d
+//
+// It is shamelessly copied from the Ruby-on-Rails equivalent.
+//
+//  http://apidock.com/rails/ActionView/Helpers/DateHelper/distance_of_time_in_words
+//
+// It returns something along the lines of this:
+//
 //  0 <-> 29 secs                                                             # => less than a minute
 //  30 secs <-> 1 min, 29 secs                                                # => 1 minute
 //  1 min, 30 secs <-> 44 mins, 29 secs                                       # => [2..44] minutes
@@ -82,6 +87,8 @@ func RoughDurationDirection(d time.Duration) string {
 //  1 yr, 3 months <-> 1 yr, 9 months                                         # => over 1 year
 //  1 yr, 9 months <-> 2 yr minus 1 sec                                       # => almost 2 years
 //  2 yrs <-> max time or date                                                # => (same rules as 1 yr)
+//
+// Currenly no attempt is made to handle: leap-seconds, leap-years or dayligt savings time.
 func RoughDuration(d time.Duration) string {
 
 	// i guess this could be implemented with a binary search, but it would not
